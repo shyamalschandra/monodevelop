@@ -304,12 +304,12 @@ namespace MonoDevelop.Ide.Desktop
 			}
 		}
 
-		static Lazy<IFilePathToContentTypeProvider> filePathToContentTypeProvider = CompositionManager.GetExport<IFilePathToContentTypeProvider> ();
+		static Lazy<IFileToContentTypeService> fileToContentTypeService = CompositionManager.GetExport<IFileToContentTypeService> ();
 		MimeTypeNode FindMimeTypeForFile (string fileName)
 		{
 			try {
-				if (filePathToContentTypeProvider.Value.TryGetContentTypeForFilePath (fileName, out IContentType contentType) &&
-					contentType != PlatformCatalog.Instance.ContentTypeRegistryService.UnknownContentType) {
+				IContentType contentType = fileToContentTypeService.Value.GetContentTypeForFilePath (fileName);
+				if (contentType != PlatformCatalog.Instance.ContentTypeRegistryService.UnknownContentType) {
 					string mimeType = PlatformCatalog.Instance.MimeToContentTypeRegistryService.GetMimeType (contentType);
 					if (mimeType != null) {
 						MimeTypeNode mt = FindMimeType (mimeType);
