@@ -83,10 +83,9 @@ namespace Mono.TextEditor
 		{
 			if (filePath != null)
 			{
-				IFilePathRegistryService filePathRegistryService = CompositionManager.GetExportedValue<IFilePathRegistryService> ();
-
-				IContentType contentTypeFromPath = filePathRegistryService.GetContentTypeForPath (filePath);
-				if (contentTypeFromPath != PlatformCatalog.Instance.ContentTypeRegistryService.UnknownContentType)
+				var filePathToContentTypeProvider = CompositionManager.GetExportedValue<IFilePathToContentTypeProvider> ();
+				if (filePathToContentTypeProvider.TryGetContentTypeForFilePath (filePath, out var contentTypeFromPath) && 
+					contentTypeFromPath != PlatformCatalog.Instance.ContentTypeRegistryService.UnknownContentType)
 				{
 					return contentTypeFromPath;
 				}
